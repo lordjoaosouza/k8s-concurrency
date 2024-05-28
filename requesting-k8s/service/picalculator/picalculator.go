@@ -1,18 +1,42 @@
 package picalculator
 
 import (
-	"github.com/lordjoaosouza/k3s-concurrency/util/resutil"
+	"context"
+	"github.com/lordjoaosouza/k3s-concurrency/presenter/res"
 	"github.com/rs/zerolog"
+	"os"
 )
 
 type Service struct {
-	resutil *resutil.ResUtil
-	logger  *zerolog.Logger
+	logger *zerolog.Logger
 }
 
-func New(logger *zerolog.Logger, util *resutil.ResUtil) *Service {
+func New(logger *zerolog.Logger) *Service {
 	return &Service{
-		resutil: util,
-		logger:  logger,
+		logger: logger,
 	}
+}
+
+func (svc Service) CalculatePI(ctx context.Context, quantity int) (*res.CalculatePi, error) {
+	hostName, err := os.Hostname()
+	if err != nil {
+		return nil, err
+	}
+
+	pi := 0.0
+	denominator := 1.0
+	for i := 0; i < quantity; i++ {
+		if i%2 == 0 {
+			pi += 4 / denominator
+		} else {
+			pi -= 4 / denominator
+		}
+
+		denominator += 2.0
+	}
+
+	return &res.CalculatePi{
+		HostName: hostName,
+		PiValue:  pi,
+	}, nil
 }

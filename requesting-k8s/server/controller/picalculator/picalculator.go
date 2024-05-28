@@ -29,5 +29,10 @@ func (ctrl *Controller) CalculatePi(ctx echo.Context) error {
 		return ctx.JSON(ctrl.resutil.Wrap(nil, err, http.StatusBadRequest))
 	}
 
-	return
+	PiCalculatorResponse, err := ctrl.svc.PiCalculatorService.CalculatePI(ctx.Request().Context(), quantity)
+	if err != nil {
+		return ctx.JSON(ctrl.resutil.Wrap(nil, err, http.StatusInternalServerError))
+	}
+
+	return ctx.JSON(ctrl.resutil.Wrap(PiCalculatorResponse, nil, http.StatusOK))
 }

@@ -17,9 +17,9 @@ export default function RequestsContainer({ requests, setIsRunning }: RequestsCo
       const singleResults = []
       const resultsCluster = []
       for (let i = 0; i < requests; i++) {
-        singleResults.push(single.get('/picalc/10'))
+        singleResults.push(single.get('/picalc/100000'))
 
-        resultsCluster.push(cluster.get('/picalc/10'))
+        resultsCluster.push(cluster.get('/picalc/100000'))
       }
 
       try {

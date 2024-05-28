@@ -19,9 +19,9 @@ func Get() *Config {
 
 	return &Config{
 		InternalConfig: &InternalConfig{
-			RunningLocal: viper.GetBool("RUNNING_LOCAL"),
-			ServerPort:   viper.GetInt("SERVER_PORT"),
-			ServiceName:  viper.GetString("SERVICE_NAME"),
+			RunningLocal: true,
+			ServerPort:   8080,
+			ServiceName:  "requesting-k8s",
 		},
 	}
 }

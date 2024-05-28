@@ -7,7 +7,7 @@ import (
 )
 
 func ValidateCalculatePi(ctx echo.Context) (int, error) {
-	quantityStr := ctx.Param("quantityInt")
+	quantityStr := ctx.Param("quantity")
 
 	if quantityStr == "" {
 		return 0, errors.New("quantityInt variable is null")
