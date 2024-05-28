@@ -1,21 +1,23 @@
 import Image from 'next/image'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Progress } from '@/components/ui/progress'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 interface ResultsCardProps {
   title: string
   description: string
   icon: string
-  progressValue: number
+  data: {
+    requestsAmount: number
+    requestsTime: number
+  }
 }
 
 export default function RequestsCard({
   title,
   description,
   icon,
-  progressValue,
+  data
 }: ResultsCardProps) {
   return (
     <div>
@@ -26,11 +28,34 @@ export default function RequestsCard({
           </CardTitle>
           <CardDescription>{description}</CardDescription>
         </CardHeader>
-        <CardContent className={'flex h-full flex-col items-center justify-center'}>
-          <div className={'h-1/2 w-full'}>
-            <Label>Requesting...</Label>
-            <Progress value={progressValue} />
-          </div>
+        <CardContent className={'flex h-[calc(384px-112px)] flex-col items-center justify-center'}>
+          <Table>
+            <TableCaption>A list of stress test results.</TableCaption>
+
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Metric</TableHead>
+                <TableHead className="text-right">Amount</TableHead>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">Requests amount</TableCell>
+                <TableCell className="text-right">{data.requestsAmount}</TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell className="font-medium">Total request time</TableCell>
+                <TableCell className="text-right">{data.requestsTime}ms</TableCell>
+              </TableRow>
+              
+              <TableRow>
+                <TableCell className="font-medium">Request/ms</TableCell>
+                <TableCell className="text-right">{data.requestsTime / data.requestsAmount}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

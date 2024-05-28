@@ -1,72 +1,78 @@
-import { Repeat } from 'lucide-react'
+import {useQuery} from '@tanstack/react-query'
+import {LoaderCircle, Repeat} from 'lucide-react'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import {useEffect, useState} from 'react';
 
+import {executeRequests} from '@/api/requests'
 import RequestsCard from '@/components/requests/requests-card'
-import { Button } from '@/components/ui/button'
-import { cluster, single } from '@/services/request'
+import {Button} from '@/components/ui/button'
+import {queryClient} from '@/services/react-query'
+
+import {Label} from '../ui/label'
 
 interface RequestsContainerProps {
   requests: number
   setIsRunning: (isRunning: boolean) => void
 }
 
-export default function RequestsContainer({ requests, setIsRunning }: RequestsContainerProps) {
+export default function RequestsContainer({requests, setIsRunning}: RequestsContainerProps) {
+  const [isContentPresent, setIsContentPresent] = useState<boolean>(false)
+
+  const {data: requestsData} = useQuery({
+    queryKey: ['requests-data'],
+    queryFn: () => executeRequests({requests}),
+    refetchOnWindowFocus: false,
+    enabled: isContentPresent
+  })
+
   useEffect(() => {
-    const handleRequests = async () => {
-      const singleResults = []
-      const resultsCluster = []
-      for (let i = 0; i < requests; i++) {
-        singleResults.push(single.get('/picalc/100000'))
-
-        resultsCluster.push(cluster.get('/picalc/100000'))
-      }
-
-      try {
-        const singleResponses = await Promise.all(singleResults)
-        const clusterResponses = await Promise.all(resultsCluster)
-
-        console.log(singleResponses)
-        console.log(clusterResponses)
-      } catch (error) {
-        console.error('Error trying to request', error)
-      }
-    }
-
-    handleRequests().then(() => {})
-  }, [])
+    setIsContentPresent(true)
+  }, [isContentPresent])
 
   return (
-    <div className={'flex flex-col items-center gap-4'}>
+    <div className={'flex w-[784px] h-[440px] flex-col items-center gap-4'}>
       <div className={'flex w-full items-center justify-between'}>
         <h1>Stress testing with {requests} requests</h1>
-
         <Link href={'/'}>
           <Button
+            disabled={!requestsData}
             className={'gap-1'}
             onClick={() => {
               setIsRunning(false)
+              setIsContentPresent(false)
+              queryClient.removeQueries({queryKey: ['requests-data'], exact: true})
             }}
           >
-            New test <Repeat className={'size-4'} />
+            New test <Repeat className={'size-4'}/>
           </Button>
         </Link>
       </div>
 
-      <div className={'flex gap-4'}>
-        <RequestsCard
-          title={'Single Docker container'}
-          description={'With no concurrency'}
-          icon={'docker'}
-          progressValue={1}
-        />
+      <div className={'flex grow items-center justify-center gap-4'}>
+        {!requestsData &&
+          <>
+            <Label>Requesting...</Label>
+            <LoaderCircle className={'animate-spin'}/>
+          </>
+        }
 
-        <RequestsCard
-          title={'Kubernetes cluster'}
-          description={'With concurrency'}
-          icon={'k8s'}
-          progressValue={20}
-        />
+        {requestsData &&
+          <>
+            <RequestsCard
+              title={'Single Docker container'}
+              description={'With no concurrency'}
+              icon={'docker'}
+              data={{requestsAmount: requests, requestsTime: requestsData.singleRequestsTime}}
+            />
+
+            <RequestsCard
+              title={'Kubernetes cluster'}
+              description={'With concurrency'}
+              icon={'k8s'}
+              data={{requestsAmount: requests, requestsTime: requestsData.clusterRequestsTime}}
+            />
+          </>
+        }
       </div>
     </div>
   )
