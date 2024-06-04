@@ -1,34 +1,40 @@
-import { cluster, single } from '@/services/request';
+import { api } from '@/services/api'
 
 interface RequestProps {
-  requests: number;
+  requests: number
 }
 
-interface RequestResponse {
-  singleRequestsTime: number;
-  clusterRequestsTime: number;
+interface RequestData {
+  single: {
+    data: {
+      timeInMilliseconds: number
+      hits: number
+      fails: number
+    }
+  }
+
+  cluster: {
+    data: {
+      timeInMilliseconds: number
+      hits: number
+      fails: number
+    }
+  }
 }
 
 export async function executeRequests({ requests }: RequestProps) {
-  const singleResults = []
-  const resultsCluster = []
+  const singleResponse = await api.post('/picalc/testapi', {
+    ip: 'http://100.84.182.15:8000/picalc/1000000',
+    quantity: requests,
+  })
 
-  for (let i = 0; i < requests; i++) {
-    singleResults.push(single.get('/picalc/100000'))
-    resultsCluster.push(cluster.get('/picalc/100000'))
-  }
+  const clusterResponse = await api.post('/picalc/testapi', {
+    ip: 'http://100.84.182.15:8080/picalc/1000000',
+    quantity: requests,
+  })
 
-  const singleRequestStartInstant = performance.now();
-  await Promise.all(singleResults)
-  const singleRequestEndInstant = performance.now();
-
-  const singleRequestsTime = singleRequestEndInstant - singleRequestStartInstant;
-
-  const clusterRequestStartInstant = performance.now();
-  await Promise.all(resultsCluster)
-  const clusterRequestEndInstant = performance.now();
-
-  const clusterRequestsTime = clusterRequestEndInstant - clusterRequestStartInstant;
-
-  return { singleRequestsTime, clusterRequestsTime } as RequestResponse;
+  return {
+    single: { ...singleResponse.data },
+    cluster: { ...clusterResponse.data },
+  } as RequestData
 }
