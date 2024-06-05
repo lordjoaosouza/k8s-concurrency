@@ -23,10 +23,17 @@ Testing concurrency with Kubernetes based on a stress test application.
 3. **Create the load balancer service**: `kubectl apply -f service.yaml`
 4. **Run the single container application**:
    `docker run -d -p 8000:8080 --restart unless-stopped --cpus="0.2" --name requesting-k8s lordjoaosouza/requesting-k8s:latest`
+5. **Wait for API be ready to receive requests, can check the single container logs and cluster pods logs until see
+   something like this output:**
+
+```
+   {"level":"info","service":"requesting-k8s","time":"2024-06-05T20:55:00Z","message":"8080"} 
+   {"level":"info","service":"requesting-k8s","time":"2024-06-05T20:55:00Z","message":"starting server"}
+```
 
 #### Locally
 
-1. **Change the `<SERVER-IP>` in the Docker Compose file from `NEXT_PUBLIC_SERVER_IP` environment variable**
+1. **Change the `<SERVER-IP>` in the Docker Compose file from `NEXT_PUBLIC_SERVER_IP` build args**
 2. **Run the local applications listed on Docker Compose file**: `docker compose up -d`
 
 After that, you can access the front-end application on `http://localhost:3000` and the test API

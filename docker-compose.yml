@@ -1,14 +1,18 @@
+version: "3"
 services:
   visualizing-k8s:
     container_name: visualizing-k8s
-    image: lordjoaosouza/visualizing-k8s:latest
+    # image: lordjoaosouza/visualizing-k8s:latest
+    build:
+      context: ./visualizing-k8s
+      args:
+        # Replace <SERVER-IP> with the IP of the server where single container and Kubernetes cluster are running
+        - NEXT_PUBLIC_SERVER_IP=<SERVER-IP>
     depends_on:
       - test-requesting-k8s
     ports:
       - "3000:3000"
-    environment:
-      # Replace <SERVER-IP> with the IP of the server where single container and Kubernetes cluster are running
-      - NEXT_PUBLIC_SERVER_IP=<SERVER-IP>
+
   test-requesting-k8s:
     container_name: test-requesting-api
     image: lordjoaosouza/test-requesting-k8s:latest
