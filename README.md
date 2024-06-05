@@ -8,7 +8,7 @@ Testing concurrency with Kubernetes based on a stress test application.
 
 ---
 
-## 🖥️ Tech Stack∂
+## 🖥️ Tech Stack
 
 [![Stack](https://skillicons.dev/icons?i=ts,go,nextjs,tailwind,docker,kubernetes)](https://skillicons.dev)
 
@@ -26,8 +26,8 @@ Testing concurrency with Kubernetes based on a stress test application.
 
 #### Locally
 
-1. **Change the server ip on docker compose file on** `<SERVER-IP>` from `NEXT_PUBLIC_SERVER_IP` environment variable
-2. **Run the local applications listed on docker-compose file**: `docker compose up -d`
+1. **Change the `<SERVER-IP>` in the Docker Compose file from `NEXT_PUBLIC_SERVER_IP` environment variable**
+2. **Run the local applications listed on Docker Compose file**: `docker compose up -d`
 
 After that, you can access the front-end application on `http://localhost:3000` and the test API
 on `http://localhost:8080`.
