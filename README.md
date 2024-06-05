@@ -1,55 +1,69 @@
-<p align="center">
-    <img src="assets/hero-light.webp" alt="Image Example" width="400px">
-    <img src="assets/hero-dark.webp" alt="Image Example" width="400px">
-</p>
-
-<p align="center">
-    <img src="assets/results-light.webp" alt="Image Example" width="400px">
-    <img src="assets/results-dark.webp" alt="Image Example" width="400px">
-</p>
+<div align="center">
+    <img src="assets/running.gif" alt="Image Example" width="720">
+</div>
 
 # Visualizing K8s
 
 Testing concurrency with Kubernetes based on a stress test application.
 
-## Tech Stack
+---
 
-[![My Skills](https://skillicons.dev/icons?i=ts,go,nextjs,tailwind,docker,kubernetes)](https://skillicons.dev)
+## 🖥️ Tech Stack∂
 
-## Getting Started
+[![Stack](https://skillicons.dev/icons?i=ts,go,nextjs,tailwind,docker,kubernetes)](https://skillicons.dev)
 
-1. **Install Dependencies**: `npm install or yarn`
-2. **Create containers**: `docker-compose up -d`
-3. **Environment variables**: Copy `.env.example` to a new `.env.local`
-4. **Database Setup**: `npx prisma migrate dev --name init`
-5. **Start Developing**: `npm run start:dev (api) & npm run dev (frontend)`
+---
 
-<h2 id="routes">📍 API Endpoints</h2>
+## ▶️ Getting Started
 
-The endpoints follow this structure, where ``precision`` is the precision for the Pi calculation,
-and ``quantity`` is the number of threads that will be launched to call the API:
+#### On server
 
-```json
+1. **Create the Kubernetes cluster using K3s for example**
+2. **Deploy the application using the following command**: `kubectl apply -f deployment.yaml`
+3. **Create the load balancer service**: `kubectl apply -f service.yaml`
+4. **Run the single container application**:
+   `docker run -d -p 8000:8080 --restart unless-stopped --cpus="0.2" --name requesting-k8s lordjoaosouza/requesting-k8s:latest`
+
+#### Locally
+
+1. **Run the local applications listed on docker-compose file**: `docker compose up -d`
+
+After that, you can access the front-end application on `http://localhost:3000` and the test API
+on `http://localhost:8080`.
+Also, the single container application can be accessed on `<SERVER-IP>:8000` and the Kubernetes load balancer service
+on `<SERVER-IP>:8080` (when requesting to load balancer service, the requests will be distributed between the pods).
+
+---
+
+## 📍 API Endpoints
+
+The endpoints follow this structure, where ``PRECISION`` is the precision for the Pi calculation,
+and ``QUANTITY`` is the number of threads that will be launched to call the API:
+
+```yaml
 {
-  "ip": "<IP>:PORT/picalc/<precision>",
-  "quantity": <quantity>
+  "ip": "<SERVER-IP>:<PORT>/picalc/<PRECISION>",
+  "quantity": <QUANTIYY>
 }
 ```
 
-<h3 id="get-auth-detail">POST / Boot Stress Test</h3>
+### POST / Boot Stress Test
+
 <kbd>POST /http://localhost:8080/picalc/testapi</kbd>
 
-Example Single container endpoint:
+### Example Single container endpoint:
 
 **REQUEST**
+
 ```json
 {
-  "ip": "<container-ip>:8000/picalc/1000000",
+  "ip": "<SERVER-IP>:8000/picalc/1000000",
   "quantity": 1000
 }
 ```
 
 **RESPONSE**
+
 ```json
 {
   "success": true,
@@ -62,16 +76,19 @@ Example Single container endpoint:
 }
 ```
 
-Example cluster endpoint:
+### Example cluster endpoint:
 
 **REQUEST**
+
 ```json
 {
-  "ip": "<cluster-ip>:8080/picalc/1000000",
+  "ip": "<SERVER-IP>:8080/picalc/1000000",
   "quantity": 1000
 }
 ```
+
 **RESPONSE**
+
 ```json
 {
   "success": true,
@@ -84,13 +101,15 @@ Example cluster endpoint:
 }
 ```
 
+---
 
-<h2 id="colab">🤝 Collaborators</h2>
+## 🤝 Collaborators
+
 <table>
   <tr>
     <td align="center">
       <a href="#">
-        <img src="https://github.com/Sarinho01.png" width="100px;" alt="Fernanda Kipper Profile Picture"/><br>
+        <img src="https://github.com/Sarinho01.png" width="100px;" alt="Alan Sarinho"/><br>
         <sub>
           <a href="https://github.com/Sarinho01">Alan Sarinho</a>
         </sub>
@@ -98,7 +117,7 @@ Example cluster endpoint:
     </td>
     <td align="center">
       <a href="#">
-        <img src="https://github.com/lordjoaosouza.png" width="100px;" alt="Elon Musk Picture"/><br>
+        <img src="https://github.com/lordjoaosouza.png" width="100px;" alt="João Souza"/><br>
         <sub>
           <a href="https://github.com/lordjoaosouza">João Souza</a>
         </sub>
@@ -106,7 +125,7 @@ Example cluster endpoint:
     </td>
     <td align="center">
       <a href="#">
-        <img src="https://github.com/raiisoares.png" width="100px;" alt="Foto do Steve Jobs"/><br>
+        <img src="https://github.com/raiisoares.png" width="100px;" alt="Raí Soares"/><br>
         <sub>
           <a href="https://github.com/raiisoares">Raí Soares</a>
         </sub>
@@ -115,7 +134,9 @@ Example cluster endpoint:
   </tr>
 </table>
 
-## License
+---
+
+## 📄 License
 
 This software is available under the following licenses:
 
