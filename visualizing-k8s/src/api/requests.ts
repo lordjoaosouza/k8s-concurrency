@@ -23,13 +23,15 @@ interface RequestData {
 }
 
 export async function executeRequests({ requests }: RequestProps) {
+  const serverIp = process.env.NEXT_PUBLIC_SERVER_IP
+
   const singleResponse = await api.post('/picalc/testapi', {
-    ip: 'http://100.84.182.15:8000/picalc/1000000',
+    ip: `http://${serverIp}:8000/picalc/1000000`,
     quantity: requests,
   })
 
   const clusterResponse = await api.post('/picalc/testapi', {
-    ip: 'http://100.84.182.15:8080/picalc/1000000',
+    ip: `http://${serverIp}:8080/picalc/1000000`,
     quantity: requests,
   })
 
